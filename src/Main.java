@@ -45,7 +45,5 @@ public class Main {
                 System.out.println(auth.returnLoginStatus(loginSuccessful, fName, lName));
             }
         }
-
-        input.close();
     }
 }
