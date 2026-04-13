@@ -54,21 +54,16 @@ public class UnitTest {
     }
 
     // --- LOGIN TESTS (assertTrue/False) ---
-
     @Test
     public void testLoginSuccessful() {
-        // First register a valid user
         login.registerUser("kyl_1", "Ch&&sec@ke99!", "+27838968976");
-        // Then try to login
         boolean result = login.loginUser("kyl_1", "Ch&&sec@ke99!");
         assertTrue(result);
     }
 
     @Test
     public void testLoginFailed() {
-        // Register user
         login.registerUser("kyl_1", "Ch&&sec@ke99!", "+27838968976");
-        // Try to login with wrong password
         boolean result = login.loginUser("kyl_1", "wrongPass");
         assertFalse(result);
     }
