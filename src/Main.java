@@ -12,7 +12,7 @@ public class Main {
         System.out.println("Enter Last Name:");
         String lName = input.nextLine();
 
-        System.out.println("Enter Username (Must have '_' and max 5 chars):");
+        System.out.println("Enter Username (Must contain an underscore and it must not be more than max 5 characters):");
         String user = input.nextLine();
 
         System.out.println("Enter Password (8+ chars, Uppercase, Number, Special):");
