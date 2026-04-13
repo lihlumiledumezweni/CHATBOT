@@ -5,7 +5,7 @@ public class Main {
         Scanner input = new Scanner(System.in);
         Login auth = new Login();
 
-        // --- REGISTRATION PHASE ---
+        // --- REGISTRATION PHASE ---//
         System.out.println("Enter First Name:");
         String fName = input.nextLine();
 
@@ -25,8 +25,7 @@ public class Main {
         String registrationMessage = auth.registerUser(user, pass, phone);
         System.out.println(registrationMessage);
 
-        // --- LOGIN PHASE ---
-        // Changed comparison to "Username successfully captured." to match your Login class return
+        // --- LOGIN PHASE ---//
         if (registrationMessage.contains("Username successfully captured")) {
 
             boolean loginSuccessful = false;
@@ -41,7 +40,7 @@ public class Main {
 
                 loginSuccessful = auth.loginUser(enteredUser, enteredPass);
 
-                // FIXED: Passing fName and lName here as required by your returnLoginStatus method
+
                 System.out.println(auth.returnLoginStatus(loginSuccessful, fName, lName));
             }
         }
