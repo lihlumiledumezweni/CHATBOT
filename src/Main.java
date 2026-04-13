@@ -15,10 +15,10 @@ public class Main {
         System.out.println("Enter Username (Must contain an underscore and it must not be more than max 5 characters):");
         String user = input.nextLine();
 
-        System.out.println("Enter Password (8+ chars, Uppercase, Number, Special):");
+        System.out.println("Enter Password (The password must be at least 8 characters long,include Uppercase,include Number,include Special Character):");
         String pass = input.nextLine();
 
-        System.out.println("Enter Cell Phone Number (e.g., +27123456789):");
+        System.out.println("Enter Cell Phone Number (Your cellphone must have an international code, the number must not include more than 10 characters):");
         String phone = input.nextLine();
 
         // FIXED: Now passing user, pass, and phone to match your new class
