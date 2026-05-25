@@ -5,44 +5,68 @@ public class Main {
         Scanner input = new Scanner(System.in);
         Login auth = new Login();
 
-        // --- REGISTRATION PHASE ---//
-        System.out.println("Enter First Name:");
-        String fName = input.nextLine();
 
-        System.out.println("Enter Last Name:");
-        String lName = input.nextLine();
+            // Place this directly inside the "if (loginSuccessful)" logic branch in Main.java
+            System.out.println("\nWelcome to QuickChat.");
+            System.out.print("How many messages wish to enter? ");
+            int totalCount = input.nextInt();
+            input.nextLine(); // Clear the buffer scanner newline character
 
-        System.out.println("Enter Username (Must contain an underscore and it must not be more than max 5 characters):");
-        String user = input.nextLine();
+            int createdCount = 0;
+            Message lastProcessedMessage = null;
 
-        System.out.println("Enter Password (The password must be at least 8 characters long,include Uppercase,include Number,include Special Character):");
-        String pass = input.nextLine();
+            while (createdCount < totalCount) {
+                System.out.println("\n--- MAIN MENU ---");
+                System.out.println("1) Send Messages");
+                System.out.println("2) Show recently sent messages");
+                System.out.println("3) Quit");
+                System.out.print("Choose an option: ");
+                int choice = input.nextInt();
+                input.nextLine(); // Clear scanner buffer
 
-        System.out.println("Enter Cell Phone Number (Your cellphone must have an international code, the number must not include more than 10 characters):");
-        String phone = input.nextLine();
+                if (choice == 3) {
+                    System.out.println("Exiting application...");
+                    break;
+                } else if (choice == 2) {
+                    System.out.println("Coming Soon.");
+                } else if (choice == 1) {
+                    // Instantiate tracking object
+                    Message messageObj = new Message();
 
-        // FIXED: Now passing user, pass, and phone to match your new class
-        String registrationMessage = auth.registerUser(user, pass, phone);
-        System.out.println(registrationMessage);
+                    System.out.print("Enter Recipient Cell Number (+27XXXXXXXXX): ");
+                    String targetPhone = input.nextLine();
+                    System.out.println(messageObj.checkRecipientCell(targetPhone));
 
-        // --- LOGIN PHASE ---//
-        if (registrationMessage.contains("Username successfully captured")) {
+                    System.out.print("Enter Message text (Max 250 characters): ");
+                    String txt = input.nextLine();
+                    System.out.println(messageObj.validateMessageLength(txt));
 
-            boolean loginSuccessful = false;
+                    System.out.println("\nAction Options:");
+                    System.out.println("1 - Send Message");
+                    System.out.println("2 - Disregard Message");
+                    System.out.println("3 - Store Message to send later");
+                    System.out.print("Select action: ");
+                    int actionChoice = input.nextInt();
+                    input.nextLine(); // Clear buffer
 
-            while (!loginSuccessful) {
-                System.out.println("\n--- LOGIN ---");
-                System.out.print("Enter Username: ");
-                String enteredUser = input.nextLine();
+                    // Routes action
+                    String actionResult = messageObj.SentMessage(actionChoice, targetPhone, txt);
+                    System.out.println(actionResult);
 
-                System.out.print("Enter Password: ");
-                String enteredPass = input.nextLine();
+                    // Print details if successfully sent or saved
+                    if (actionChoice == 1 || actionChoice == 3) {
+                        System.out.println("\n--- Captured Details ---");
+                        System.out.println(messageObj.printMessages());
+                        lastProcessedMessage = messageObj;
+                    }
 
-                loginSuccessful = auth.loginUser(enteredUser, enteredPass);
+                    createdCount++;
+                }
+            }
 
-
-                System.out.println(auth.returnLoginStatus(loginSuccessful, fName, lName));
+// Display final tracking accumulation totals at closure
+            if (lastProcessedMessage != null) {
+                System.out.println("\nTotal cumulative messages sent during this run: " + lastProcessedMessage.returnTotalMessagess());
             }
         }
     }
-}
