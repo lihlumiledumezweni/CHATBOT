@@ -59,38 +59,4 @@ public class Login {
         }
     }
 
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        Login login = new Login();
-
-        System.out.println("=== User Registration ===");
-        System.out.print("Enter first name: ");
-        String firstName = scanner.nextLine();
-        System.out.print("Enter last name: ");
-        String lastName = scanner.nextLine();
-        System.out.print("Enter username (must contain underscore and be ≤ 5 chars): ");
-        String username = scanner.nextLine();
-        System.out.print("Enter password (8+ chars, 1 capital, 1 number, 1 special char): ");
-        String password = scanner.nextLine();
-        System.out.print("Enter cell phone number (+27XXXXXXXXX): ");
-        String phone = scanner.nextLine();
-
-        // Register user
-        String registrationResult = login.registerUser(username, password, phone);
-        System.out.println("\n" + registrationResult);
-
-        // Login attempt
-        if (registrationResult.contains("successfully captured")) {
-            System.out.println("\n=== Login ===");
-            System.out.print("Enter username: ");
-            String loginUsername = scanner.nextLine();
-            System.out.print("Enter password: ");
-            String loginPassword = scanner.nextLine();
-
-            boolean loginSuccess = login.loginUser(loginUsername, loginPassword);
-            String loginMessage = login.returnLoginStatus(loginSuccess, firstName, lastName);
-            System.out.println("\n" + loginMessage);
-        }
-
-    }
-}
+   }

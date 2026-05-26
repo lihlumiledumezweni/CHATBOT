@@ -2,7 +2,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;
-import java.util.Scanner;
 
 public class Message {
     // Instance variables matching marking criteria tables
@@ -93,7 +92,26 @@ public class Message {
             case 2: // Disregard Message
                 return "Press 0 to delete the message.";
             case 3: // Store Message
-                return "Message successfully stored.";
+                String jsonContent = storeMessage();
+                File jsonFile = new File("stored_message.json");
+
+                try {
+                    // FIXED: Check if the file already exists and has text inside it
+                    boolean appendComma = jsonFile.exists() && jsonFile.length() > 0;
+
+                    try (FileWriter writer = new FileWriter(jsonFile, true)) {
+                        if (appendComma) {
+                            // Places the comma BEFORE the new message to cleanly separate them
+                            writer.write(",\n" + jsonContent);
+                        } else {
+                            // If it's the very first message, write it perfectly clean
+                            writer.write(jsonContent);
+                        }
+                        return "Message successfully appended and saved to 'stored_message.json'.";
+                    }
+                } catch (IOException e) {
+                    return "Message fields set, but failed to write JSON file: " + e.getMessage();
+                }
             default:
                 return "Invalid selection routing.";
         }
@@ -114,16 +132,13 @@ public class Message {
 
     // Method: storeMessage() - Formats variables as a clean JSON string natively without third-party libraries
     public String storeMessage() {
-        // Safe check for null values to prevent breaking JSON formatting
         String id = (this.messageID != null) ? this.messageID : "";
         String phone = (this.recipient != null) ? this.recipient : "";
         String text = (this.messageText != null) ? this.messageText : "";
         String hash = (this.messageHash != null) ? this.messageHash : "";
 
-        // Safely escape any internal quotes inside the message body text
         text = text.replace("\"", "\\\"");
 
-        // Formats exactly matching a pretty-printed JSON schema structure
         return "{\n" +
                 "  \"messageID\": \"" + id + "\",\n" +
                 "  \"numMessagesSent\": " + this.numMessagesSent + ",\n" +

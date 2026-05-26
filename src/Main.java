@@ -5,12 +5,55 @@ public class Main {
         Scanner input = new Scanner(System.in);
         Login auth = new Login();
 
+        String registrationResult = "";
+        String firstName = "";
+        String lastName = "";
 
-            // Place this directly inside the "if (loginSuccessful)" logic branch in Main.java
+        // --- REGISTRATION PHASE (Keeps looping until registration criteria pass) ---
+        while (true) {
+            System.out.println("=== User Registration ===");
+            System.out.print("Enter first name: ");
+            firstName = input.nextLine();
+            System.out.print("Enter last name: ");
+            lastName = input.nextLine();
+            System.out.print("Enter username (must contain underscore and be ≤ 5 chars): ");
+            String username = input.nextLine();
+            System.out.print("Enter password (8+ chars, 1 capital, 1 number, 1 special char): ");
+            String password = input.nextLine();
+            System.out.print("Enter cell phone number (+27XXXXXXXXX): ");
+            String phone = input.nextLine();
+
+            registrationResult = auth.registerUser(username, password, phone);
+            System.out.println("\n" + registrationResult);
+
+            // Break out of the registration loop only if successful
+            if (registrationResult.contains("successfully captured")) {
+                break;
+            }
+            System.out.println("Registration failed. Please try again with valid inputs.\n");
+        }
+
+        // --- LOGIN PHASE ---
+        boolean loginSuccessful = false;
+
+        while (!loginSuccessful) {
+            System.out.println("\n=== Login ===");
+            System.out.print("Enter username: ");
+            String loginUsername = input.nextLine();
+            System.out.print("Enter password: ");
+            String loginPassword = input.nextLine();
+
+            loginSuccessful = auth.loginUser(loginUsername, loginPassword);
+            String loginMessage = auth.returnLoginStatus(loginSuccessful, firstName, lastName);
+            System.out.println("\n" + loginMessage);
+        }
+
+        // --- QUICKCHAT APPLICATION LOGIC ---
+        if (loginSuccessful) {
             System.out.println("\nWelcome to QuickChat.");
-            System.out.print("How many messages wish to enter? ");
+            System.out.print("How many messages do you wish to enter? ");
             int totalCount = input.nextInt();
-            input.nextLine(); // Clear the buffer scanner newline character
+            input.nextLine(); // Clear the scanner buffer
 
             int createdCount = 0;
             Message lastProcessedMessage = null;
@@ -49,7 +92,7 @@ public class Main {
                     int actionChoice = input.nextInt();
                     input.nextLine(); // Clear buffer
 
-                    // Routes action
+                    // Routes action (Your updated Message class handles writing the JSON automatically here!)
                     String actionResult = messageObj.SentMessage(actionChoice, targetPhone, txt);
                     System.out.println(actionResult);
 
@@ -64,9 +107,10 @@ public class Main {
                 }
             }
 
-// Display final tracking accumulation totals at closure
+            // Display final tracking accumulation totals at closure
             if (lastProcessedMessage != null) {
                 System.out.println("\nTotal cumulative messages sent during this run: " + lastProcessedMessage.returnTotalMessagess());
             }
         }
     }
+}

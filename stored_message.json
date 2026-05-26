@@ -1,7 +1,21 @@
 {
-  "messageID": "6221317710",
+  "messageID": "0995901115",
+  "numMessagesSent": 0,
+  "recipient": "+27694563698",
+  "messageText": "Is she home?",
+  "messageHash": "09:0:ISHOME"
+},
+{
+  "messageID": "0630148971",
+  "numMessagesSent": 1,
+  "recipient": "+278459612",
+  "messageText": "nope",
+  "messageHash": "06:1:NOPENOPE"
+},
+{
+  "messageID": "7530142340",
   "numMessagesSent": 2,
-  "recipient": "+27695198464",
-  "messageText": "udihjhd",
-  "messageHash": "62:2:UDIHJHDUDIHJHD"
+  "recipient": "+279451269",
+  "messageText": "I don't know",
+  "messageHash": "75:2:IKNOW"
 }
