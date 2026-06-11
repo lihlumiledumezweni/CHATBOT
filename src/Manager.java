@@ -39,10 +39,12 @@ public class Manager {
         }
     }
 
-    public void displayLongestMessage() {
+    // UPDATED: Now returns the longest message string for JUnit assertion
+    public String displayLongestMessage() {
         if (messageCount == 0) {
-            System.out.println("No messages to display.");
-            return;
+            String output = "No messages to display.";
+            System.out.println(output);
+            return output;
         }
 
         int maxIndex = 0;
@@ -52,36 +54,50 @@ public class Manager {
             }
         }
         System.out.println("Longest Message: " + messages[maxIndex]);
+        return messages[maxIndex];
     }
 
-    public void searchByMessageId(String id) {
+    // UPDATED: Returns a formatted String containing the Recipient and Message
+    public String searchByMessageId(String id) {
         for (int i = 0; i < messageCount; i++) {
             if (messageIds[i] != null && messageIds[i].equals(id)) {
-                System.out.println("Recipient: " + recipients[i]);
-                System.out.println("Message: " + messages[i]);
-                return;
+                String result = "Recipient: " + recipients[i] + " | Message: " + messages[i];
+                System.out.println(result);
+                return result;
             }
         }
         System.out.println("Message ID not found.");
+        return "Message ID not found.";
     }
 
-    public void searchMessagesByRecipient(String recipient) {
+    // UPDATED: Returns a compiled string of all messages for the recipient
+    public String searchMessagesByRecipient(String recipient) {
+        StringBuilder sb = new StringBuilder();
         boolean found = false;
         for (int i = 0; i < messageCount; i++) {
             if (recipients[i] != null && recipients[i].equals(recipient)) {
-                System.out.println("Message to " + recipient + ": " + messages[i]);
+                sb.append(messages[i]).append(" ");
                 found = true;
             }
         }
+
+        String results = sb.toString().trim();
         if (!found) {
             System.out.println("No messages found for recipient: " + recipient);
+            return "No messages found for recipient: " + recipient;
+        } else {
+            System.out.println("Match found: " + results);
+            return results;
         }
     }
 
-    public void deleteMessageByHash(String hash) {
+    // UPDATED: Returns exact POE assignment success string
+    public String deleteMessageByHash(String hash) {
         for (int i = 0; i < messageCount; i++) {
             if (hashes[i] != null && hashes[i].equals(hash)) {
-                System.out.println("Deleting message: " + messages[i]);
+                String deletedText = messages[i];
+                System.out.println("Deleting message: " + deletedText);
+
                 // Shifting block handling element removal
                 for (int j = i; j < messageCount - 1; j++) {
                     senders[j] = senders[j + 1];
@@ -91,22 +107,30 @@ public class Manager {
                     hashes[j] = hashes[j + 1];
                 }
                 messageCount--;
-                return;
+                return "Message: \"" + deletedText + "\" successfully deleted.";
             }
         }
         System.out.println("Hash not found.");
+        return "Hash not found.";
     }
 
-    public void displayFullReport() {
-        if (messageCount == 0) { System.out.println("Full Message Report Empty."); return; }
-        System.out.println("Full Message Report:");
-        for (int i = 0; i < messageCount; i++) {
-            System.out.println("Sender: " + senders[i]);
-            System.out.println("Recipient: " + recipients[i]);
-            System.out.println("Message ID: " + messageIds[i]);
-            System.out.println("Message: " + messages[i]);
-            System.out.println("Hash: " + hashes[i]);
-            System.out.println("-----");
+    // UPDATED: Returns a full string report of all stored entries
+    public String displayFullReport() {
+        if (messageCount == 0) {
+            System.out.println("Full Message Report Empty.");
+            return "Full Message Report Empty.";
         }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("Full Message Report:\n");
+        for (int i = 0; i < messageCount; i++) {
+            sb.append("Sender: ").append(senders[i]).append("\n")
+                    .append("Recipient: ").append(recipients[i]).append("\n")
+                    .append("Message ID: ").append(messageIds[i]).append("\n")
+                    .append("Message: ").append(messages[i]).append("\n")
+                    .append("Hash: ").append(hashes[i]).append("\n-----\n");
+        }
+        System.out.print(sb.toString());
+        return sb.toString();
     }
 }
