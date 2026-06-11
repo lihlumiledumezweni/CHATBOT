@@ -2,115 +2,182 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        Scanner input = new Scanner(System.in);
-        Login auth = new Login();
+        Scanner scanner = new Scanner(System.in);
+        // Assuming your Login class is implemented elsewhere in your project
+        Login login = new Login();
 
-        String registrationResult = "";
-        String firstName = "";
-        String lastName = "";
+        // Instantiating the manager with a capacity of 100
+        Manager manager = new Manager(100);
 
-        // --- REGISTRATION PHASE (Keeps looping until registration criteria pass) ---
-        while (true) {
-            System.out.println("=== User Registration ===");
-            System.out.print("Enter first name: ");
-            firstName = input.nextLine();
-            System.out.print("Enter last name: ");
-            lastName = input.nextLine();
-            System.out.print("Enter username (must contain underscore and be ≤ 5 chars): ");
-            String username = input.nextLine();
-            System.out.print("Enter password (8+ chars, 1 capital, 1 number, 1 special char): ");
-            String password = input.nextLine();
-            System.out.print("Enter cell phone number (+27XXXXXXXXX): ");
-            String phone = input.nextLine();
+        // AUTOMATIC SEEDING: Pre-populates the system with required assignment test data
 
-            registrationResult = auth.registerUser(username, password, phone);
-            System.out.println("\n" + registrationResult);
+        System.out.println("--- Registration ---");
 
-            // Break out of the registration loop only if successful
-            if (registrationResult.contains("successfully captured")) {
-                break;
+        System.out.println("Enter First Name:");
+        String fName = scanner.nextLine();
+
+        System.out.println("Enter Last Name:");
+        String lName = scanner.nextLine();
+
+        System.out.println("Enter Username (Must include “_” and be 5 characters long.):");
+        String user = scanner.nextLine();
+
+        System.out.println("Enter Password (Min 8 chars, with uppercase, number, and special character.):");
+        String pass = scanner.nextLine();
+
+        System.out.println("Enter Cell (Include country code (e.g., +27), then up to 10 digits):");
+        String cell = scanner.nextLine();
+
+        String regStatus = login.registerUser(user, pass, cell, lName);
+        System.out.println("\n" + regStatus);
+
+
+        if (regStatus.contains("successfully added") || regStatus.contains("successfully captured")) {
+            System.out.println("\n--- Login ---");
+            boolean success = false;
+
+            while (!success) {
+                System.out.println("Enter Username:");
+                String loginUser = scanner.nextLine();
+
+                System.out.println("Enter Password:");
+                String loginPass = scanner.nextLine();
+
+                success = login.loginUser(loginUser, loginPass);
+                System.out.println(login.returnLoginStatus(success, fName, lName));
             }
-            System.out.println("Registration failed. Please try again with valid inputs.\n");
-        }
 
-        // --- LOGIN PHASE ---
-        boolean loginSuccessful = false;
 
-        while (!loginSuccessful) {
-            System.out.println("\n=== Login ===");
-            System.out.print("Enter username: ");
-            String loginUsername = input.nextLine();
-            System.out.print("Enter password: ");
-            String loginPassword = input.nextLine();
-
-            loginSuccessful = auth.loginUser(loginUsername, loginPassword);
-            String loginMessage = auth.returnLoginStatus(loginSuccessful, firstName, lastName);
-            System.out.println("\n" + loginMessage);
-        }
-
-        // --- QUICKCHAT APPLICATION LOGIC ---
-        if (loginSuccessful) {
             System.out.println("\nWelcome to QuickChat.");
-            System.out.print("How many messages do you wish to enter? ");
-            int totalCount = input.nextInt();
-            input.nextLine(); // Clear the scanner buffer
+            System.out.println("How many messages do you want to send?");
+            int numMessages = Integer.parseInt(scanner.nextLine());
 
-            int createdCount = 0;
-            Message lastProcessedMessage = null;
+            int messageCount = 0;
+            boolean running = true;
 
-            while (createdCount < totalCount) {
-                System.out.println("\n--- MAIN MENU ---");
+            while (running) {
                 System.out.println("1) Send Messages");
-                System.out.println("2) Show recently sent messages");
-                System.out.println("3) Quit");
-                System.out.print("Choose an option: ");
-                int choice = input.nextInt();
-                input.nextLine(); // Clear scanner buffer
+                System.out.println("2) Stored Messages Management");
+                System.out.println("3) Quit Application");
+                System.out.println("Choose an option (1-3):");
 
-                if (choice == 3) {
-                    System.out.println("Exiting application...");
-                    break;
-                } else if (choice == 2) {
-                    System.out.println("Coming Soon.");
-                } else if (choice == 1) {
-                    // Instantiate tracking object
-                    Message messageObj = new Message();
+                int menuChoice = Integer.parseInt(scanner.nextLine());
 
-                    System.out.print("Enter Recipient Cell Number (+27XXXXXXXXX): ");
-                    String targetPhone = input.nextLine();
-                    System.out.println(messageObj.checkRecipientCell(targetPhone));
+                switch (menuChoice) {
+                    case 1:
+                        if (messageCount >= numMessages) {
+                            System.out.println("You have reached your message limit.");
+                            break;
+                        }
 
-                    System.out.print("Enter Message text (Max 250 characters): ");
-                    String txt = input.nextLine();
-                    System.out.println(messageObj.validateMessageLength(txt));
+                        messageCount++;
 
-                    System.out.println("\nAction Options:");
-                    System.out.println("1 - Send Message");
-                    System.out.println("2 - Disregard Message");
-                    System.out.println("3 - Store Message to send later");
-                    System.out.print("Select action: ");
-                    int actionChoice = input.nextInt();
-                    input.nextLine(); // Clear buffer
+                        System.out.println("Enter recipient number:");
+                        String recipient = scanner.nextLine();
 
-                    // Routes action (Your updated Message class handles writing the JSON automatically here!)
-                    String actionResult = messageObj.SentMessage(actionChoice, targetPhone, txt);
-                    System.out.println(actionResult);
+                        String messageBody = "";
+                        Message tempMsg = null;
 
-                    // Print details if successfully sent or saved
-                    if (actionChoice == 1 || actionChoice == 3) {
-                        System.out.println("\n--- Captured Details ---");
-                        System.out.println(messageObj.printMessages());
-                        lastProcessedMessage = messageObj;
-                    }
+                        // Validation loop focuses strictly on text sizing constraints
+                        while (true) {
+                            System.out.println("Please enter a message of less than 250 characters:");
+                            messageBody = scanner.nextLine();
 
-                    createdCount++;
+                            tempMsg = new Message(recipient, messageBody);
+                            String lengthCheck = tempMsg.checkMessageLength();
+
+                            System.out.println(lengthCheck);
+                            if (lengthCheck.equals("Message ready to send.")) break;
+                        }
+
+                        System.out.println(tempMsg.checkRecipientCell());
+
+                        System.out.println("\n1) Send Message");
+                        System.out.println("2) Disregard Message");
+                        System.out.println("3) Store Message");
+                        System.out.println("Choose (1-3):");
+                        int sendChoice = Integer.parseInt(scanner.nextLine());
+
+                        // This executes file operations for Option 3
+                        String executionStatus = tempMsg.SentMessage(sendChoice);
+                        System.out.println(executionStatus);
+
+                        // FIXED: Saves live user messages to parallel arrays if they chose to Send or Store
+                        if (sendChoice == 1 || sendChoice == 3) {
+                            manager.addMessage(fName, tempMsg.getMessageId(), recipient, messageBody, tempMsg.getMessageHash());
+                            System.out.println("Message successfully committed to application memory storage.");
+                        } else {
+                            System.out.println("Message dropped.");
+                        }
+
+                        System.out.println("\n--- Message Details ---");
+                        System.out.println("Message ID: " + tempMsg.getMessageId());
+                        System.out.println("Message Hash: " + tempMsg.getMessageHash());
+                        System.out.println("Recipient: " + tempMsg.getRecipient());
+                        System.out.println("Message: " + messageBody);
+                        break;
+
+                    case 2:
+                        System.out.println("\n--- SUB-MENU: STORED MESSAGES OPTION ---");
+                        System.out.println("a. Display sender and recipient of all stored messages");
+                        System.out.println("b. Display the longest stored message");
+                        System.out.println("c. Search for a message ID and display corresponding recipient & message");
+                        System.out.println("d. Search for all the messages stored for a particular recipient");
+                        System.out.println("e. Delete a message using the message hash");
+                        System.out.println("f. Display a report that lists the full details of all messages");
+                        System.out.println("Choose execution action (a-f):");
+
+                        String subChoice = scanner.nextLine().trim().toLowerCase();
+
+                        System.out.println("\n--------------------------------------------------------------------------------");
+                        switch (subChoice) {
+                            case "a":
+                                manager.displaySendersAndRecipients();
+                                break;
+                            case "b":
+                                manager.displayLongestMessage();
+                                break;
+                            case "c":
+                                System.out.println("Enter Target Message ID to Search:");
+                                String idTarget = scanner.nextLine().trim();
+                                manager.searchByMessageId(idTarget);
+                                break;
+                            case "d":
+                                System.out.println("Enter Target Recipient Number to Filter All Messages:");
+                                String recipientTarget = scanner.nextLine().trim();
+                                manager.searchMessagesByRecipient(recipientTarget);
+                                break;
+                            case "e":
+                                System.out.println("Enter Unique Message Hash Key To Remove:");
+                                String hashTarget = scanner.nextLine().trim();
+                                manager.deleteMessageByHash(hashTarget);
+                                break;
+                            case "f":
+                                manager.displayFullReport();
+                                break;
+                            default:
+                                System.out.println("Error: Selection sub-character context was invalid.");
+                        }
+                        System.out.println("--------------------------------------------------------------------------------");
+                        break;
+
+                    case 3:
+                        running = false;
+                        System.out.println("Closing systems down. Thank you.");
+                        break;
+
+                    default:
+                        System.out.println("Invalid option.");
                 }
             }
 
-            // Display final tracking accumulation totals at closure
-            if (lastProcessedMessage != null) {
-                System.out.println("\nTotal cumulative messages sent during this run: " + lastProcessedMessage.returnTotalMessagess());
-            }
+            // Summary metrics printed upon application quit
+            System.out.println("\nTotal messages sent during this session: " + Message.returnTotalMessagess());
+            System.out.println("\n--- Message Archive Summary ---");
+            System.out.println(Message.printMessages());
+        } else {
+            System.out.println("Registration failed. Application terminating.");
         }
+        scanner.close();
     }
 }

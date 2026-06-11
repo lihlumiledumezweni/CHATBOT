@@ -1,21 +1,28 @@
 {
-  "messageID": "0995901115",
+  "messageID": "1423026986",
   "numMessagesSent": 0,
-  "recipient": "+27694563698",
-  "messageText": "Is she home?",
-  "messageHash": "09:0:ISHOME"
+  "recipient": "+27695198464",
+  "messageText": "hi",
+  "messageHash": "14:0:HIHI"
 },
 {
-  "messageID": "0630148971",
+  "messageID": "6680871240",
   "numMessagesSent": 1,
-  "recipient": "+278459612",
-  "messageText": "nope",
-  "messageHash": "06:1:NOPENOPE"
+  "recipient": "+27695198462",
+  "messageText": "hey",
+  "messageHash": "66:1:HEYHEY"
 },
 {
-  "messageID": "7530142340",
+  "messageID": "1305308422",
   "numMessagesSent": 2,
-  "recipient": "+279451269",
-  "messageText": "I don't know",
-  "messageHash": "75:2:IKNOW"
+  "recipient": "+27695198425",
+  "messageText": "hgfgx",
+  "messageHash": "13:2:HGFGXHGFGX"
+},
+{
+  "messageID": "3645854843",
+  "numMessagesSent": 3,
+  "recipient": "+27712345678",
+  "messageText": "hgvchdfghi;oj jgikook ",
+  "messageHash": "36:3:HGVCHDFGHIOJJGIKOOK"
 }

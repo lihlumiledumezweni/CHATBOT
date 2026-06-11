@@ -1,5 +1,3 @@
-import java.util.Scanner;
-
 public class Login {
     private String storedUsername;
     private String storedPassword;
@@ -25,7 +23,7 @@ public class Login {
     }
 
     // 4. Register user
-    public String registerUser(String username, String password, String phone) {
+    public String registerUser(String username, String password, String phone, String lName) {
         if (!checkUserName(username)) {
             return "Username is not correctly formatted; please ensure that your username contains an underscore and is no more than five characters in length.";
         }

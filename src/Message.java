@@ -4,26 +4,25 @@ import java.io.IOException;
 import java.util.Random;
 
 public class Message {
-    // Instance variables matching marking criteria tables
     private String messageID;
-    private int numMessagesSent; // Tracks current message sequence index
+    private int numMessagesSent;
     private String recipient;
     private String messageText;
     private String messageHash;
 
-    // Static counters for overall tracking
     private static int globalMessageCounter = 0;
     private static int totalMessagesSent = 0;
 
-    // Constructor
-    public Message() {
-        // Automatically increment and assign the message counter sequence
+    // Fixed constructor signature to accept fields straight from input loop
+    public Message(String recipient, String messageText) {
         this.numMessagesSent = globalMessageCounter;
         globalMessageCounter++;
         this.messageID = generateRandomID();
+        this.recipient = recipient;
+        this.messageText = messageText;
+        this.messageHash = createMessageHash(messageText);
     }
 
-    // Helper method to auto-generate a 10-digit random message ID string
     private String generateRandomID() {
         Random rand = new Random();
         StringBuilder sb = new StringBuilder();
@@ -33,31 +32,27 @@ public class Message {
         return sb.toString();
     }
 
-    // Method: checkMessageID() - Ensures message ID is not more than 10 characters
-    public boolean checkMessageID() {
+    public boolean checkMessageId() {
         return this.messageID != null && this.messageID.length() <= 10;
     }
 
-    // Validation Method for Unit Testing input lengths
-    public String validateMessageLength(String text) {
-        if (text.length() <= 250) {
+    public String checkMessageLength() {
+        if (this.messageText != null && this.messageText.length() <= 250) {
             return "Message ready to send.";
         } else {
-            int exceededBy = text.length() - 250;
+            int exceededBy = (this.messageText != null ? this.messageText.length() : 0) - 250;
             return "Message exceeds 250 characters by " + exceededBy + "; please reduce the size.";
         }
     }
 
-    // Method: checkRecipientCell() - Validates cell phone constraints
-    public String checkRecipientCell(String phone) {
-        if (phone.matches("^\\+27\\d{1,10}$")) {
+    public String checkRecipientCell() {
+        if (this.recipient != null && this.recipient.matches("^\\+27\\d{1,10}$")) {
             return "Cell phone number successfully captured.";
         } else {
             return "Cell phone number is incorrectly formatted or does not contain an international code. Please correct the number and try again.";
         }
     }
 
-    // Method: createMessageHash() - Generates the uppercase signature string
     public String createMessageHash(String text) {
         if (text == null || text.trim().isEmpty()) {
             return "00:0:EMPTY";
@@ -75,36 +70,23 @@ public class Message {
         return this.messageHash;
     }
 
-    // Method: SentMessage() - Handles the structural routing choice logic
-    public String SentMessage(int choice, String phone, String text) {
-        if (text.length() > 250) {
-            return "Please enter a message of less than 250 characters.";
-        }
-
-        this.recipient = phone;
-        this.messageText = text;
-        this.messageHash = createMessageHash(text);
-
+    public String SentMessage(int choice) {
         switch (choice) {
-            case 1: // Send Message
+            case 1:
                 totalMessagesSent++;
                 return "Message successfully sent.";
-            case 2: // Disregard Message
+            case 2:
                 return "Press 0 to delete the message.";
-            case 3: // Store Message
+            case 3:
                 String jsonContent = storeMessage();
                 File jsonFile = new File("stored_message.json");
 
                 try {
-                    // FIXED: Check if the file already exists and has text inside it
                     boolean appendComma = jsonFile.exists() && jsonFile.length() > 0;
-
                     try (FileWriter writer = new FileWriter(jsonFile, true)) {
                         if (appendComma) {
-                            // Places the comma BEFORE the new message to cleanly separate them
                             writer.write(",\n" + jsonContent);
                         } else {
-                            // If it's the very first message, write it perfectly clean
                             writer.write(jsonContent);
                         }
                         return "Message successfully appended and saved to 'stored_message.json'.";
@@ -117,20 +99,6 @@ public class Message {
         }
     }
 
-    // Method: printMessages() - Returns current active structured details string
-    public String printMessages() {
-        return "Message ID: " + this.messageID + "\n" +
-                "Message Hash: " + this.messageHash + "\n" +
-                "Recipient: " + this.recipient + "\n" +
-                "Message: " + this.messageText;
-    }
-
-    // Method: returnTotalMessagess() - Returns total processed sent counter across instances
-    public int returnTotalMessagess() {
-        return totalMessagesSent;
-    }
-
-    // Method: storeMessage() - Formats variables as a clean JSON string natively without third-party libraries
     public String storeMessage() {
         String id = (this.messageID != null) ? this.messageID : "";
         String phone = (this.recipient != null) ? this.recipient : "";
@@ -148,44 +116,17 @@ public class Message {
                 "}";
     }
 
-    // --- GETTERS & SETTERS ---
-    public String getMessageID() {
-        return messageID;
+    public static int returnTotalMessagess() {
+        return totalMessagesSent;
     }
 
-    public void setMessageID(String messageID) {
-        this.messageID = messageID;
+    public static String printMessages() {
+        return "Global engine stack logged " + globalMessageCounter + " total cycle run interaction instances.";
     }
 
-    public int getNumMessagesSent() {
-        return numMessagesSent;
-    }
-
-    public void setNumMessagesSent(int numMessagesSent) {
-        this.numMessagesSent = numMessagesSent;
-    }
-
-    public String getRecipient() {
-        return recipient;
-    }
-
-    public void setRecipient(String recipient) {
-        this.recipient = recipient;
-    }
-
-    public String getMessageText() {
-        return messageText;
-    }
-
-    public void setMessageText(String messageText) {
-        this.messageText = messageText;
-    }
-
-    public String getMessageHash() {
-        return messageHash;
-    }
-
-    public void setMessageHash(String messageHash) {
-        this.messageHash = messageHash;
-    }
+    // Lowercase matching getters to bridge the Main file cleanly
+    public String getMessageId() { return messageID; }
+    public String getMessageHash() { return messageHash; }
+    public String getRecipient() { return recipient; }
+    public String getMessageText() { return messageText; }
 }
