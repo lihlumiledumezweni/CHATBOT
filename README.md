@@ -1,7 +1,7 @@
 
 ## Video link:
 POE2: https://youtu.be/1IH3cXkE5PE
-POE3: 
+POE3: https://youtu.be/1LhPJGYr2eU?si=-ZzN7wKukC6M7Y4L
 
 ## References 
 Scott Rowell. (2025). JSON in Java - Writing to Files. [Online Video]. Available at: https://youtu.be/pJt-AYrmopo [Accessed 16 May 2026].
